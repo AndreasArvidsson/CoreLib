@@ -5,42 +5,34 @@
 
 JsonNode* JsonParser::fromString(const std::string &str) {
 	const char *p = str.c_str();
-	removeBlank(p);
-	return parseObject(p);
+	size_t row = 1;
+	removeBlank(p, row);
+	return parseObject(p, row);
 }
 
 JsonNode* JsonParser::fromFile(const File &file) {
 	std::string content;
 	if (!file.getData(content)) {
-		throw Error("Cant read json file '%s'", file.getPath().c_str());
+		throw Error("JSON - Cant read file '%s'", file.getPath().c_str());
 	}
 	return fromString(content);
 }
 
 void JsonParser::toFile(const File &file, const JsonNode &node) {
 	if (!file.setData(JsonParser::toString(node))) {
-		throw Error("Cant write file content");
+		throw Error("JSON - Cant write content to file '%s'", file.getPath().c_str());
 	}
 }
 
-JsonNode* JsonParser::parseObject(const char *&p) {
+JsonNode* JsonParser::parseObject(const char *&p, size_t &row) {
 	JsonNode *pObjectNode = new JsonNode(JsonNodeType::OBJECT);
 	try {
-		match(p, '{');
-		removeBlank(p);
-		while (*p == '"') {
-			std::string name = matchName(p);
-			removeBlank(p);
-			match(p, ':');
-			removeBlank(p);
-			pObjectNode->put(name, matchValue(p));
-			removeBlank(p);
-			if (*p == ',') {
-				match(p, ',');
-			}
-			removeBlank(p);
+		match(p, '{', row);
+		removeBlank(p, row);
+		while (*p != '}' && *p != '\0') {
+			parseField(p, pObjectNode, row);
 		}
-		match(p, '}');
+		match(p, '}', row);
 	}
 	catch (const Error &e) {
 		delete pObjectNode;
@@ -49,21 +41,29 @@ JsonNode* JsonParser::parseObject(const char *&p) {
 	return pObjectNode;
 }
 
-JsonNode* JsonParser::parseArray(const char *&p) {
+void JsonParser::parseField(const char *&p, JsonNode *pObjectNode, size_t &row) {
+	std::string name = matchFieldID(p, row);
+	removeBlank(p, row);
+	match(p, ':', row);
+	removeBlank(p, row);
+	pObjectNode->put(name, matchValue(p, row));
+	removeBlank(p, row);
+	if (*p == ',') {
+		match(p, ',', row);
+		removeBlank(p, row);
+		parseField(p, pObjectNode, row);
+	}
+}
+
+JsonNode* JsonParser::parseArray(const char *&p, size_t &row) {
 	JsonNode *pArrayNode = new JsonNode(JsonNodeType::ARRAY);
 	try {
-	match(p, '[');
-	removeBlank(p);
-	while (*p != ']' && *p != '\0') {
-		pArrayNode->add(matchValue(p));
-		removeBlank(p);
-		if (*p == ',') {
-			match(p, ',');
-			removeBlank(p);
+		match(p, '[', row);
+		removeBlank(p, row);
+		while (*p != ']' && *p != '\0') {
+			parseItem(p, pArrayNode, row);
 		}
-	}
-	removeBlank(p);
-	match(p, ']');
+		match(p, ']', row);
 	}
 	catch (const Error &e) {
 		delete pArrayNode;
@@ -72,28 +72,38 @@ JsonNode* JsonParser::parseArray(const char *&p) {
 	return pArrayNode;
 }
 
-std::string JsonParser::matchName(const char *&p) {
-	match(p, '"');
-	std::string name = next(p, '"');
-	if (name.size() == 0) {
-		throw Error("JSON parse failed. Expected name near: %s", p);
+void JsonParser::parseItem(const char *&p, JsonNode *pArrayNode, size_t &row) {
+	pArrayNode->add(matchValue(p, row));
+	removeBlank(p, row);
+	if (*p == ',') {
+		match(p, ',', row);
+		removeBlank(p, row);
+		parseItem(p, pArrayNode, row);
 	}
-	match(p, '"');
+}
+
+std::string JsonParser::matchFieldID(const char *&p, size_t &row) {
+	match(p, '"', row);
+	std::string name = next(p, '"', row);
+	if (name.size() == 0) {
+		throw Error("JSON(%lu) - Expected ID near '%s'", row, next(p, '\n', row));
+	}
+	match(p, '"', row);
 	return name;
 }
 
-JsonNode* JsonParser::matchValue(const char *&p) {
+JsonNode* JsonParser::matchValue(const char *&p, size_t &row) {
 	if (*p == '{') {
-		return parseObject(p);
+		return parseObject(p, row);
 	}
 	if (*p == '[') {
-		return parseArray(p);
+		return parseArray(p, row);
 	}
 	if (*p == '"') {
-		match(p, '"');
-		std::string value = next(p, '"');
+		match(p, '"', row);
+		std::string value = next(p, '"', row);
 		JsonNode *pNode = new JsonNode(value);
-		match(p, '"');
+		match(p, '"', row);
 		return pNode;
 	}
 	std::string tmp = next(p).c_str();
@@ -111,25 +121,31 @@ JsonNode* JsonParser::matchValue(const char *&p) {
 			return new JsonNode(atof(tmp.c_str()));
 		}
 	}
-	throw Error("JSON parse failed. Unknown value: \"%s\"", tmp.c_str());
+	throw Error("JSON(%lu) - Unknown value '%s' near '%s'", row, tmp.c_str(), next(p, '\n', row).c_str());
 }
 
-void JsonParser::match(const char *&str, const char expected) {
+void JsonParser::match(const char *&str, const char expected, size_t &row) {
 	if (*str != expected) {
-		throw Error("JSON parse failed. Expected: \"%c\", found: \"%c\"", expected, *str);
+		throw Error("JSON(%lu) - Expected '%c', found '%s'", row, expected, next(str, '\n', row).c_str());
 	}
 	++str; //Step over the char.
 }
 
-void JsonParser::removeBlank(const char *&p) {
+void JsonParser::removeBlank(const char *&p, size_t &row) {
 	while (*p == ' ' || *p == '\n' || *p == '\t') {
+		if (*p == '\n') {
+			++row;
+		}
 		++p;
 	}
 }
 
-std::string JsonParser::next(const char *&p, const char breakChar) {
+std::string JsonParser::next(const char *&p, const char breakChar, size_t &row) {
 	const char *begin = p;
-	while (*p != breakChar) {
+	while (*p != breakChar && *p != '\0') {
+		if (*p == '\n') {
+			++row;
+		}
 		++p;
 	}
 	return std::string(begin, p);

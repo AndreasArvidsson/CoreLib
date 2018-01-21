@@ -43,6 +43,9 @@ JsonNode* JsonParser::parseObject(const char *&p, size_t &row) {
 
 void JsonParser::parseField(const char *&p, JsonNode *pObjectNode, size_t &row) {
 	std::string name = matchFieldID(p, row);
+	if (pObjectNode->has(name)) {
+		throw Error("JSON(%lu) - Duplicate field name '%s'", row, name.c_str());
+	}
 	removeBlank(p, row);
 	match(p, ':', row);
 	removeBlank(p, row);

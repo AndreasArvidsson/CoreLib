@@ -34,6 +34,7 @@
     <ClInclude Include="JsonParser.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MemoryManager.h" />
+    <ClInclude Include="OS.h" />
     <ClInclude Include="Str.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

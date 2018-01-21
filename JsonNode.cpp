@@ -1,4 +1,5 @@
 #include "JsonNode.h"
+#include <algorithm> //std::remove
 
 JsonNode *JsonNode::_pMissingNode = nullptr;
 
@@ -27,10 +28,21 @@ JsonNode::JsonNode(const std::string &value) {
 	_value.textValue = value;
 }
 
+JsonNode::JsonNode(const char *value) {
+	_type = JsonNodeType::TEXT;
+	_value.textValue = value;
+}
+
 JsonNode::JsonNode(const double value) {
 	_type = JsonNodeType::NUMBER;
 	_value.numberValue = value;
 	_value.intValue = (long)value;
+}
+
+JsonNode::JsonNode(const long value) {
+	_type = JsonNodeType::INTEGER;
+	_value.numberValue = (double)value;
+	_value.intValue = value;
 }
 
 JsonNode::JsonNode(const int value) {
@@ -126,14 +138,14 @@ const bool JsonNode::has(const std::string &fieldName) const {
 
 JsonNode* JsonNode::get(const size_t index) const {
 	if (!isArray()) {
-		throw std::exception("Not an array");
+		throw Error("Not an array");
 	}
 	return _items[index];
 }
 
 JsonNode* JsonNode::get(const std::string &fieldName) const {
 	if (!isObject()) {
-		throw std::exception("Not an object");
+		throw Error("Not an object");
 	}
 	return _fields.at(fieldName);
 }
@@ -155,16 +167,20 @@ JsonNode* JsonNode::path(const std::string &fieldName) const {
 	return getMissingNode();
 }
 
+const std::vector<std::string> JsonNode::getOrder() const {
+	return _fieldOrder;
+}
+
 void JsonNode::add(JsonNode *pJsonNode) {
 	if (!isArray()) {
-		throw std::exception("Not an array");
+		throw Error("Not an array");
 	}
 	_items.push_back(pJsonNode);
 }
 
-void JsonNode::put(const std::string fieldName, JsonNode *pJsonNode) {
+void JsonNode::put(const std::string &fieldName, JsonNode *pJsonNode) {
 	if (!isObject()) {
-		throw std::exception("Not an object");
+		throw Error("Not an object");
 	}
 	if (!has(fieldName)) {
 		_fieldOrder.push_back(fieldName);
@@ -172,13 +188,18 @@ void JsonNode::put(const std::string fieldName, JsonNode *pJsonNode) {
 	_fields[fieldName] = pJsonNode;
 }
 
-void JsonNode::put(const std::string fieldName, const std::string &text) {
-	if (!isObject()) {
-		throw std::exception("Not an object");
+void JsonNode::remove(const size_t index) {
+	if (!isArray()) {
+		throw Error("Not an array");
 	}
-	put(fieldName, new JsonNode(text));
+	_items.erase(_items.begin() + index);
 }
 
-const std::vector<std::string> JsonNode::getOrder() const {
-	return _fieldOrder;
+void JsonNode::remove(const std::string &fieldName) {
+	if (!isObject()) {
+		throw Error("Not an object");
+	}
+	if (_fields.erase(fieldName)) {
+		_fieldOrder.erase(std::remove(_fieldOrder.begin(), _fieldOrder.end(), fieldName), _fieldOrder.end());
+	}
 }

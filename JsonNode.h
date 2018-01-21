@@ -7,9 +7,6 @@
 #include <vector>
 #include "Error.h"
 
-//class JsonNode;
-//typedef typename std::unordered_map<std::string, JsonNode>::const_iterator const_iterator;
-
 enum class JsonNodeType {
 	OBJECT,
 	ARRAY,
@@ -48,7 +45,9 @@ public:
 	JsonNode();
 	JsonNode(const JsonNodeType type);
 	JsonNode(const std::string &value);
+	JsonNode(const char *value);
 	JsonNode(const double value);
+	JsonNode(const long value);
 	JsonNode(const int value);
 	JsonNode(const bool value);
 	~JsonNode();
@@ -77,32 +76,32 @@ public:
 	JsonNode* get(const std::string &fieldName) const;
 	JsonNode* path(const size_t index) const;
 	JsonNode* path(const std::string &fieldName) const;
-	void add(JsonNode *pJsonNode);
-	void put(const std::string fieldName, JsonNode *pJsonNode);
-	void put(const std::string fieldName, const std::string &text);
-	
 	const std::vector<std::string> getOrder() const;
 
+	void add(JsonNode *pJsonNode);
+	void put(const std::string &fieldName, JsonNode *pJsonNode);
 
-	/*virtual const_iterator begin() const {
-		return nullptr;
-	}*/
-
-	//virtual const_iterator begin() const {
-	//	throw std::exception("Not an object");
-	//}
-
-	//virtual const_iterator end() const {
-	//	throw std::exception("Not an object");
-	//}
-
-	/*const_iterator begin() const {
-		return _fields.begin();
+	template<typename T>
+	void add(const T &value) {
+		if (!isArray()) {
+			throw Error("Not an array");
+		}
+		_items.push_back(new JsonNode(value));
 	}
 
-	const_iterator end() const {
-		return _fields.end();
-	}*/
+	template<typename T>
+	void put(const std::string &fieldName, const T &value) {
+		if (!isObject()) {
+			throw Error("Not an object");
+		}
+		if (!has(fieldName)) {
+			_fieldOrder.push_back(fieldName);
+		}
+		_fields[fieldName] = new JsonNode(value);
+	}
+
+	void remove(const size_t index);
+	void remove(const std::string &fieldName);
 
 private:
 	static JsonNode *_pMissingNode;

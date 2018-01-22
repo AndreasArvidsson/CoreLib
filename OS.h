@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include "Error.h"
+#include <xmmintrin.h>
 
 class OS {
 public:
@@ -21,6 +22,10 @@ public:
 
 	static void show() {
 		ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);
+	}
+
+	static void flushDenormalizedZero() {
+		_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 	}
 
 };

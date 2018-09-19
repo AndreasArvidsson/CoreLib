@@ -14,7 +14,10 @@ public:
 		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 	}
 
-	static const std::string toIsoString(const time_t timestamp);
+	static const std::string getLocalDateTimeString();
+	static const std::string getLocalDateTimeString(const time_t timestamp);
+	static const std::string getIsoString();
+	static const std::string getIsoString(const time_t timestamp);
 	static const bool fromIsoString(const char *isoString, time_t *timestampOut);
 
 };

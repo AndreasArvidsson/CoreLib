@@ -16,11 +16,15 @@ public:
 		}
 	}
 
-	static void minimize() {
+	static void minimizeWindow() {
 		ShowWindow(GetConsoleWindow(), SW_MINIMIZE);
 	}
 
-	static void show() {
+	static void hideWindow() {
+		ShowWindow(GetConsoleWindow(), SW_HIDE);
+	}
+
+	static void showWindow() {
 		ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);
 	}
 

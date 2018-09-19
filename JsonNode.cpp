@@ -125,7 +125,7 @@ const std::string JsonNode::textValue() const {
 }
 
 const size_t JsonNode::size() const {
-	return _items.size();
+	return isObject() ? _fields.size() : _items.size();
 }
 
 const bool JsonNode::has(const size_t index) const {
@@ -171,6 +171,10 @@ const std::vector<std::string> JsonNode::getOrder() const {
 	return _fieldOrder;
 }
 
+const std::unordered_map<std::string, JsonNode*> JsonNode::getFields() const {
+	return _fields;
+}
+
 void JsonNode::add(JsonNode *pJsonNode) {
 	if (!isArray()) {
 		throw Error("Not an array");
@@ -202,4 +206,13 @@ void JsonNode::remove(const std::string &fieldName) {
 	if (_fields.erase(fieldName)) {
 		_fieldOrder.erase(std::remove(_fieldOrder.begin(), _fieldOrder.end(), fieldName), _fieldOrder.end());
 	}
+}
+
+void JsonNode::clear() {
+	if (!isObject() && !isArray()) {
+		throw Error("Not an object or array");
+	}
+	_fields.clear();
+	_fieldOrder.clear();
+	_items.clear();
 }

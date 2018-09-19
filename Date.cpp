@@ -4,7 +4,26 @@
 
 #define BUFFER_SIZE 25
 
-const std::string Date::toIsoString(const time_t timestamp) {
+const std::string Date::getLocalDateTimeString() {
+	return getLocalDateTimeString(getCurrentTimeMillis());
+}
+
+const std::string Date::getLocalDateTimeString(const time_t timestamp) {
+	_tzset();
+	//strftime can only handle seconds.
+	time_t tSec = timestamp / 1000 - _timezone + _daylight * 3600;
+	char buf[BUFFER_SIZE];
+	struct tm *pTM = gmtime(&tSec);
+	int fractions = tSec ? (int)(timestamp % tSec) : 0;
+	size_t size = strftime(buf, BUFFER_SIZE, "%Y-%m-%dT%H:%M:%S", pTM);
+	return std::string(buf);
+}
+
+const std::string Date::getIsoString() {
+	return getIsoString(getCurrentTimeMillis());
+}
+
+const std::string Date::getIsoString(const time_t timestamp) {
     //strftime can only handle seconds.
     time_t tSec = timestamp / 1000;
     char buf[BUFFER_SIZE];
@@ -51,15 +70,8 @@ const bool Date::fromIsoString(const char *isoString, time_t *timestampOut) {
             }
         }
     }
-    _tzset();
-    
-    long timezoneDiff;
-#ifdef _get_timezone
-    _get_timezone(&timezoneDiff);
-#else
-    timezoneDiff = _timezone;
-#endif
 
-    *timestampOut = 1000 * (timesec - timezoneDiff) + f;
+	_tzset();
+    *timestampOut = 1000 * (timesec - _timezone) + f;
     return true;
 }

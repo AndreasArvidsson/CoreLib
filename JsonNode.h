@@ -78,6 +78,8 @@ public:
 	JsonNode* path(const std::string &fieldName) const;
 	const std::vector<std::string> getOrder() const;
 
+	const std::unordered_map<std::string, JsonNode*> getFields() const;
+
 	void add(JsonNode *pJsonNode);
 	void put(const std::string &fieldName, JsonNode *pJsonNode);
 
@@ -102,6 +104,7 @@ public:
 
 	void remove(const size_t index);
 	void remove(const std::string &fieldName);
+	void clear();
 
 private:
 	static JsonNode *_pMissingNode;

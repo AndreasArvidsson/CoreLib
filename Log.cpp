@@ -10,5 +10,5 @@ void Log::log(const char*const type, const char*const file, const unsigned int l
     va_start(ap, str);
     vsnprintf(text, BUFFER_SIZE, str, ap);
     va_end(ap);
-	printf("%s: %s(%d): %s\n", type, file, line, text);
+	printf("%s %s(%d): %s\n", type, file, line, text);
 }

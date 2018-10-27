@@ -61,7 +61,7 @@ public:
 	const bool isText() const;
 	const bool isNull() const;
 	const bool isMissingNode() const;
-	
+
 	const bool boolValue() const;
 	const double doubleValue() const;
 	const float floatValue() const;
@@ -96,7 +96,12 @@ public:
 		if (!isObject()) {
 			throw Error("Not an object");
 		}
-		if (!has(fieldName)) {
+		if (has(fieldName)) {
+			//Have to delete existing or get memory leaks.
+			delete _fields[fieldName];
+		}
+		//New field name/key. Add to list.
+		else {
 			_fieldOrder.push_back(fieldName);
 		}
 		_fields[fieldName] = new JsonNode(value);

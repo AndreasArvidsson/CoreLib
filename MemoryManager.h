@@ -11,106 +11,128 @@
 template <typename K, typename V>
 class KeyValuePair {
 public:
-    K key;
-    V value;
+	K key;
+	V value;
 
-    void set(K k, V v) {
-        key = k;
-        value = v;
-    }
+	void set(K k, V v) {
+		key = k;
+		value = v;
+	}
 };
 
 template <typename K, typename V>
 class Map {
 public:
 
-    Map() {
-        init(1000);
-    }
+	Map() {
+		init(1000);
+	}
 
-    Map(const size_t capacity) {
-        init(capacity);
-    }
+	Map(const size_t capacity) {
+		init(capacity);
+	}
 
-    void init(const size_t capacity) {
-        _capacity = capacity;
-        _data = (KeyValuePair<K, V>*) malloc(sizeof(KeyValuePair<K, V>) * capacity);
-        _size = 0;
-    }
+	void init(const size_t capacity) {
+		_capacity = capacity;
+		_data = (KeyValuePair<K, V>*) malloc(sizeof(KeyValuePair<K, V>) * capacity);
+		_size = 0;
+	}
 
-    virtual ~Map() {
-        free(_data);
-    }
+	virtual ~Map() {
+		free(_data);
+	}
 
-    const bool put(const K &key, const V &value) {
-        for (size_t i = 0; i < _size; ++i) {
-            if (_data[i].key == key) {
-                _data[i].value = value;
-                return true;
-            }
-        }
-        return add(key, value);
-    }
+	const bool put(const K &key, const V &value) {
+		for (size_t i = 0; i < _size; ++i) {
+			if (_data[i].key == key) {
+				_data[i].value = value;
+				return true;
+			}
+		}
+		return add(key, value);
+	}
 
-    const bool get(const K &key, V &value) {
-        for (size_t i = 0; i < _size; ++i) {
-            if (_data[i].key == key) {
-                value = _data[i].value;
-                return true;
-            }
-        }
-        return false;
-    }
+	const bool get(const K &key, V *pResult) const {
+		for (size_t i = 0; i < _size; ++i) {
+			if (_data[i].key == key) {
+				memcpy(pResult, &_data[i].value, sizeof(V));
+				//value = _data[i].value;
+				return true;
+			}
+		}
+		return false;
+	}
 
-    const bool contains(const K &key) const {
-        for (size_t i = 0; i < _size; ++i) {
-            if (_data[i].key == key) {
-                return true;
-            }
-        }
-        return false;
-    }
+	const bool getByIndex(const size_t index, V *pResult) const {
+		if (index < _size) {
+			memcpy(pResult, &_data[index].value, sizeof(V));
+			//value = _data[index];
+			return true;
+		}
+		return false;
+	}
 
-    const bool remove(const K &key) {
-        for (size_t i = 0; i < _size; ++i) {
-            if (_data[i].key == key) {
-                _data[i].key = _data[_size - 1].key;
-                _data[i].value = _data[_size - 1].value;
-                --_size;
-                return true;
-            }
-        }
-        return false;
-    }
+	const bool contains(const K &key) const {
+		for (size_t i = 0; i < _size; ++i) {
+			if (_data[i].key == key) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    const size_t size() const {
-        return _size;
-    }
+	const bool remove(const K &key) {
+		for (size_t i = 0; i < _size; ++i) {
+			if (_data[i].key == key) {
+				_data[i].key = _data[_size - 1].key;
+				_data[i].value = _data[_size - 1].value;
+				--_size;
+				return true;
+			}
+		}
+		return false;
+	}
 
-    const size_t capacity() const {
-        return _capacity;
-    }
+	const size_t size() const {
+		return _size;
+	}
 
-    void print() const {
-        for (size_t i = 0; i < _size; ++i) {
-            printf("%p\n", _data[i].key);
-        }
-    }
+	const size_t capacity() const {
+		return _capacity;
+	}
+
+	KeyValuePair<K, V> getData() {
+		return _data;
+	}
 
 private:
-    KeyValuePair<K, V> *_data;
-    size_t _capacity, _size;
+	KeyValuePair<K, V> *_data;
+	size_t _capacity, _size;
 
-    const bool add(K key, V value) {
-        if (_size == _capacity) {
-            return false;
-        }
-        _data[_size++].set(key, value);
-        return true;
-    }
+	const bool add(K key, V value) {
+		if (_size == _capacity) {
+			return false;
+		}
+		_data[_size++].set(key, value);
+		return true;
+	}
 
-    Map(const Map& orig);
+	Map(const Map& orig);
 
+};
+
+/*************************************************
+********** POINTER CLASS
+*************************************************/
+
+class Pointer {
+public:
+	void *address;
+	size_t size;
+	bool isArray;
+	Pointer() {}
+	Pointer(void *address, size_t size, bool isArray) : address(address), size(size), isArray(isArray) {}
+	Pointer(const Pointer &ref) : address(ref.address), size(ref.size), isArray(ref.isArray) {}
 };
 
 /*************************************************
@@ -120,143 +142,158 @@ private:
 class MemoryManager {
 public:
 
-    static MemoryManager* getInstance() {
-        if (!_pInstance) {
-            _pInstance = (MemoryManager*)malloc(sizeof(MemoryManager));
-            _pInstance->init();
-        }
-        return _pInstance;
-    }
+	static MemoryManager* getInstance() {
+		if (!_pInstance) {
+			_pInstance = (MemoryManager*)malloc(sizeof(MemoryManager));
+			_pInstance->init();
+		}
+		return _pInstance;
+	}
 
-    const bool hasLeak() const {
-        return _map.size() + _mapArr.size() > 0;
-    }
+	const bool hasLeak() const {
+		return _map.size() > 0;
+	}
 
-    void displayInfo() {
-        if (_map.size() + _mapArr.size() > 0) {
-            LOG_ERROR("MEMORY LEAK DETECTED! p: %lu, p[]: %lu", _map.size(), _mapArr.size());
-        }
-        LOG_INFO("Max memory usage: %.1fkB", _maxMemoryUsage / 1000.0);
-        LOG_INFO("Max num pointers used: %lu", _maxPointers);
-    }
+	void displayInfo() const {
+		if (_map.size() > 0) {
+			size_t numP = 0;
+			size_t numArrP = 0;
+			Pointer pointer;
+			for (size_t i = 0; i < _map.size(); ++i) {
+				_map.getByIndex(i, &pointer);
+				if (pointer.isArray) {
+					++numArrP;
+				}
+				else {
+					++numP;
+				}
+			}
+			LOG_ERROR("MEMORY LEAK DETECTED! p: %lu, p[]: %lu", numP, numArrP);
+		}
+		LOG_INFO("Max memory usage: %.1fkB", _maxMemoryUsage / 1000.0);
+		LOG_INFO("Max num pointers used: %lu", _maxPointers);
+	}
 
-    void assertNoLeak() const {
-        if (getInstance()->hasLeak()) {
-            getInstance()->displayInfo();
-            system("PAUSE");
-            exit(EXIT_FAILURE);
-        }
-    }
+	void displayPointers() const {
+		Pointer pointer;
+		LOG_INFO("Address\t\tSize\tisArray");
+		for (size_t i = 0; i < _map.size(); ++i) {
+			_map.getByIndex(i, &pointer);
+			LOG_INFO("%p\t%d\t%d", pointer.address, pointer.size, pointer.isArray);
+		}
+	}
 
-    void* mallocMemory(const size_t size, const bool isArr) {
-        //Add 4 * padding to the size.
-        void *p = malloc(size + _paddingSize * 4);
-        size_t address = reinterpret_cast<size_t> (p);
-        //if (address == 0x0000027964C740F0) {
-        //	int a = 2;
-        //}
-        if (isArr) {
-            add(_mapArr, p, size);
-        }
-        else {
-            add(_map, p, size);
-        }
-        size_t numPointers = _mapArr.size() + _map.size();
-        _maxPointers = _maxPointers > numPointers ? _maxPointers : numPointers;
-        return p;
-    }
+	void assertNoLeak() const {
+		if (getInstance()->hasLeak()) {
+			getInstance()->displayInfo();
+			printf("\n");
+			getInstance()->displayPointers();
+			printf("\n");
+			system("PAUSE");
+			exit(EXIT_FAILURE);
+		}
+	}
 
-    void freeMemory(void*const p, const bool isArr) {
-        if (isArr) {
-            remove(_mapArr, p);
-        }
-        else {
-            remove(_map, p);
-        }
-        free(p);
-    }
+	void* mallocMemory(const size_t size, const bool isArray) {
+		//Add 4 * padding to the size.
+		void *p = malloc(size + _paddingSize * 4);
+
+		if (_map.contains(p)) {
+			LOG_ERROR("***** POINTER ALREADY IN USE: 0x%p *****", p);
+		}
+
+		//Add padding at end data.
+		addPadding(p, size);
+		//Store pointer in map.
+		_map.put(p, Pointer(p, size, isArray));
+
+		//Update stats
+		_memoryUsage += size;
+		_maxMemoryUsage = max(_maxMemoryUsage, _memoryUsage);
+		_maxPointers = max(_maxPointers, _map.size());
+		return p;
+	}
+
+	void freeMemory(void*const p, const bool isArr) {
+		if (p == nullptr) {
+			return;
+		}
+		//Get size from map.
+		Pointer pointer;
+		if (!_map.get(p, &pointer)) {
+			LOG_ERROR("*** CAN'T FIND POINTER: 0x%p ***", p);
+			return;
+		}
+		if (pointer.isArray && !isArr) {
+			LOG_ERROR("*** DELETE MISSMATCH(new[], delete): 0x%p ***", p);
+			return;
+		}
+		if (!pointer.isArray && isArr) {
+			LOG_ERROR("*** DELETE MISSMATCH(new, delete[]): 0x%p ***", p);
+			return;
+		}
+		_memoryUsage -= pointer.size;
+		//Check if padding is valid.
+		checkPadding(p, pointer.size);
+		//Remove pointer from map.
+		_map.remove(p);
+		//Actually free memory.
+		free(p);
+	}
 
 private:
-    static MemoryManager* _pInstance;
+	static MemoryManager* _pInstance;
 
-    size_t _padding, _paddingSize, _memoryUsage, _maxMemoryUsage, _maxPointers;
-    Map<void*, size_t> _map, _mapArr;
+	size_t _padding, _paddingSize, _memoryUsage, _maxMemoryUsage, _maxPointers;
+	Map<void*, Pointer> _map;
 
-    void addPadding(void *const p, const size_t size) {
-        //Copy padding data to the memory at the end.
-        memcpy((char*)p + size, &_padding, _paddingSize);
-        memcpy((char*)p + size + _paddingSize, &_padding, _paddingSize);
-        memcpy((char*)p + size + _paddingSize * 2, &_padding, _paddingSize);
-        memcpy((char*)p + size + _paddingSize * 3, &_padding, _paddingSize);
-    }
+	void addPadding(void *const p, const size_t size) {
+		//Copy padding data to the memory at the end.
+		memcpy((char*)p + size, &_padding, _paddingSize);
+		memcpy((char*)p + size + _paddingSize, &_padding, _paddingSize);
+		memcpy((char*)p + size + _paddingSize * 2, &_padding, _paddingSize);
+		memcpy((char*)p + size + _paddingSize * 3, &_padding, _paddingSize);
+	}
 
-    void checkPadding(void *const p, const size_t size) {
-        size_t *padding = (size_t*)((char*)p + size);
-        if (padding[0] != _padding || padding[1] != _padding || padding[2] != _padding || padding[3] != _padding) {
-            LOG_ERROR("*** HEAP CORRUPTION DETECTED! ***");
-        }
-    }
+	void checkPadding(void *const p, const size_t size) {
+		size_t *padding = (size_t*)((char*)p + size);
+		if (padding[0] != _padding || padding[1] != _padding || padding[2] != _padding || padding[3] != _padding) {
+			LOG_ERROR("*** HEAP CORRUPTION DETECTED! ***");
+		}
+	}
 
-    void init() {
-        _padding = 0xAAAAAAAA;
-        _paddingSize = sizeof(_padding);
-        _memoryUsage = _maxMemoryUsage = _maxPointers = 0;
-        _map.init(500);
-        _mapArr.init(500);
-    }
-
-    void add(Map<void*, size_t> &map, void* p, size_t size) {
-        if (map.contains(p)) {
-            LOG_ERROR("***** POINTER ALREADY IN USE: 0x%p *****", p);
-        }
-        _memoryUsage += size;
-        if (_memoryUsage > _maxMemoryUsage) {
-            _maxMemoryUsage = _memoryUsage;
-        }
-        //Add padding at end data.
-        addPadding(p, size);
-        //Store pointer in map.
-        map.put(p, size);
-    }
-
-    void remove(Map<void*, size_t> &map, void*const p) {
-        //Get size from map.
-        size_t size;
-        if (!map.get(p, size)) {
-            //LOG_ERROR("*** CAN'T FIND POINTER: 0x%p ***", p);
-            return;
-        }
-        _memoryUsage -= size;
-        //Check if padding is valid.
-        checkPadding(p, size);
-        //Remove pointer from map.
-        map.remove(p);
-    }
+	void init() {
+		_padding = 0xAAAAAAAA;
+		_paddingSize = sizeof(_padding);
+		_memoryUsage = _maxMemoryUsage = _maxPointers = 0;
+		_map.init(500);
+		//_mapArr.init(500);
+	}
 
 };
 
 MemoryManager*  MemoryManager::_pInstance = nullptr;
 
 void* operator new(const size_t size) {
-    if (!size) {
-        LOG_ERROR("NEW SIZE IS ZERO");
-    }
-    return MemoryManager::getInstance()->mallocMemory(size, false);
+	if (!size) {
+		LOG_ERROR("NEW SIZE IS ZERO");
+	}
+	return MemoryManager::getInstance()->mallocMemory(size, false);
 }
 
 void* operator new [](const size_t size) {
-    if (!size) {
-        LOG_ERROR("NEW[] SIZE IS ZERO");
-    }
-    return MemoryManager::getInstance()->mallocMemory(size, true);
+	if (!size) {
+		LOG_ERROR("NEW[] SIZE IS ZERO");
+	}
+	return MemoryManager::getInstance()->mallocMemory(size, true);
 }
 
 void operator delete(void*const p) {
-    MemoryManager::getInstance()->freeMemory(p, false);
+	MemoryManager::getInstance()->freeMemory(p, false);
 }
 
 void operator delete [](void*const p) {
-    MemoryManager::getInstance()->freeMemory(p, true);
+	MemoryManager::getInstance()->freeMemory(p, true);
 }
 
 #endif

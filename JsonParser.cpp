@@ -13,7 +13,7 @@ JsonNode* JsonParser::fromString(const std::string &str) {
 JsonNode* JsonParser::fromFile(const File &file) {
 	std::string content;
 	if (!file.getData(content)) {
-		throw Error("JSON - Cant read file '%s'", file.getPath().c_str());
+		throw Error("JSON - Can't read file '%s'", file.getPath().c_str());
 	}
 	return fromString(content);
 }

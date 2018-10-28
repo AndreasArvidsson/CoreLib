@@ -17,28 +17,34 @@ public:
 		_index = _resetAt = _interval = 0;
 	}
 
-	void start() {
+	inline void start() {
 		_t1 = Date::getCurrentTimeMillis();
-		_index = _interval = 0;
+		_index = 0;
 	}
 
-	void stop() {
+	inline void stop() {
 		time_t duration = Date::getCurrentTimeMillis() - _t1;
-		if (duration) {
-			printf("%s: %lldms\n", _name.c_str(), Date::getCurrentTimeMillis() - _t1);
+		printf("%s: %lldms\n", _name.c_str(), Date::getCurrentTimeMillis() - _t1);
+	}
+
+	inline void stopInterval() {
+		if (_index) {
+			printf("%s interval: %lldms, mean: %.2fms\n", _name.c_str(), _interval, (float)_interval / _index);
 		}
-		if (_interval) {
+		else {
 			printf("%s interval: %lldms\n", _name.c_str(), _interval);
 		}
+		_interval = 0;
+		_index = 0;
 	}
 
-	void resetAt(const size_t counts) {
+	inline void resetAt(const size_t counts) {
 		_resetAt = counts;
 	}
 
 	inline void tick() {
 		++_index;
-		if (_index >= _resetAt) {
+		if (_resetAt && _index >= _resetAt) {
 			stop();
 			start();
 		}
@@ -50,8 +56,9 @@ public:
 
 	inline void intervalEnd() {
 		_interval += Date::getCurrentTimeMillis() - _t1;
-		if (_resetAt) {
-			tick();
+		++_index;
+		if (_resetAt && _index >= _resetAt) {
+			stopInterval();
 		}
 	}
 

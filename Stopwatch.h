@@ -5,16 +5,18 @@
 class Stopwatch {
 public:
 
-	Stopwatch() {
+	Stopwatch(const size_t resetAt = 0) {
 		_name = "Timer";
+		_resetAt = resetAt;
 		_t1 = 0;
-		_index = _resetAt = _interval = 0;
+		_index = _interval = 0;
 	}
 
-	Stopwatch(const std::string &name) {
+	Stopwatch(const std::string &name, const size_t resetAt = 0) {
 		_name = name;
+		_resetAt = resetAt;
 		_t1 = 0;
-		_index = _resetAt = _interval = 0;
+		_index = _interval = 0;
 	}
 
 	inline void start() {

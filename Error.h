@@ -6,6 +6,8 @@
 class Error : public std::exception {
 public:
 
+	Error() {}
+
 	Error(char const* fmt, ...) {
 		va_list ap;
 		va_start(ap, fmt);

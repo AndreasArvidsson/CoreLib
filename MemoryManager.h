@@ -209,8 +209,8 @@ public:
 
 		//Update stats
 		_memoryUsage += size;
-		_maxMemoryUsage = max(_maxMemoryUsage, _memoryUsage);
-		_maxPointers = max(_maxPointers, _map.size());
+		_maxMemoryUsage = std::max(_maxMemoryUsage, _memoryUsage);
+		_maxPointers = std::max(_maxPointers, _map.size());
 		return p;
 	}
 
@@ -221,7 +221,7 @@ public:
 		//Get size from map.
 		Pointer pointer;
 		if (!_map.get(p, &pointer)) {
-			LOG_ERROR("*** CAN'T FIND POINTER: 0x%p ***", p);
+			//LOG_ERROR("*** CAN'T FIND POINTER: 0x%p ***", p);
 			return;
 		}
 		if (pointer.isArray && !isArr) {

@@ -43,6 +43,15 @@ public:
 		return std::string(value);
 	}
 
+	static const std::string getExeDirPath() {
+		std::string exePath = getExePath();
+		size_t i = exePath.rfind('\\');
+		if (i != std::string::npos) {
+			return exePath.substr(0, i + 1);
+		}
+		return exePath;
+	}
+
 	static const bool regValueExists(const HKEY hKey, const std::string &path, const std::string &name) {
 		char value[1024];
 		DWORD length;

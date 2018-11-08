@@ -28,4 +28,7 @@ public:
 	static const std::string getIsoString(const time_t timestamp);
 	static const bool fromIsoString(const char *isoString, time_t *timestampOut);
 
+private:
+	static const long getTimezoneOffset();
+
 };

@@ -24,6 +24,7 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="JsonNode.h" />
     <ClInclude Include="JsonParser.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="OS.h" />

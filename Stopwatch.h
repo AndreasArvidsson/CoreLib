@@ -2,6 +2,8 @@
 #include <string>
 #include <chrono>
 
+#undef max // to get duration::max() to work
+
 class Stopwatch {
 public:
 
@@ -30,6 +32,9 @@ public:
 	inline void intervalEnd() {
 		const std::chrono::duration<double, std::milli> duration = std::chrono::high_resolution_clock::now() - _t1;
 		_interval += duration;
+		if (duration < _intervalMin) {
+			_intervalMin = duration;
+		}
 		if (duration > _intervalMax) {
 			_intervalMax = duration;
 		}
@@ -43,13 +48,12 @@ public:
 
 	inline void stopInterval() {
 		if (_index) {
-			printf("%s interval | Total: %.0fms, Max: %.2fms, Mean: %.2fms\n", _name.c_str(), _interval.count(), _intervalMax.count(), (_interval / _index).count());
+			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms, Mean: %.2fms\n", _name.c_str(), _interval.count(), _intervalMin.count(), _intervalMax.count(), (_interval / _index).count());
 		}
 		else {
-			printf("%s interval | Total: %.0fms, Max: %.2fms,\n", _name.c_str(), _interval.count(), _intervalMax.count());
+			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms\n", _name.c_str(), _interval.count(), _intervalMin.count(), _intervalMax.count());
 		}
-		_interval = _intervalMax = std::chrono::duration_values<std::chrono::milliseconds>::zero();
-		_index = 0;
+		reset();
 	}
 
 	inline void resetAt(const size_t counts) {
@@ -67,13 +71,19 @@ public:
 private:
 	std::string _name;
 	std::chrono::high_resolution_clock::time_point _t1;
-	std::chrono::duration<double, std::milli> _interval, _intervalMax;
+	std::chrono::duration<double, std::milli> _interval, _intervalMin, _intervalMax;
 	size_t _resetAt;
 	size_t _index;
+	std::chrono::milliseconds _tmp;
 
 	void init(const std::string &name, const size_t resetAt) {
 		_name = name;
 		_resetAt = resetAt;
+		reset();
+	}
+
+	inline void reset() {
+		_intervalMin = { std::chrono::duration_values<double>::max() };
 		_interval = _intervalMax = std::chrono::duration_values<std::chrono::milliseconds>::zero();
 		_index = 0;
 		//_t1 = 0;

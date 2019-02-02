@@ -16,7 +16,7 @@ const std::string Date::getLocalDateTimeString(const time_t timestamp) {
 	char buf[BUFFER_SIZE];
 	struct tm *pTM = gmtime(&tSec);
 	int fractions = tSec ? (int)(timestamp % tSec) : 0;
-	size_t size = strftime(buf, BUFFER_SIZE, "%Y-%m-%dT%H:%M:%S", pTM);
+	size_t size = strftime(buf, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", pTM);
 	return std::string(buf);
 }
 

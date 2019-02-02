@@ -1,15 +1,21 @@
 #pragma once
-#include <cstring>
+#include <string>
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__))
 #define LOG_INFO(str, ...)      Log::log("INFO ", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
 #define LOG_WARN(str, ...)      Log::log("WARN ", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
 #define LOG_ERROR(str, ...)     Log::log("ERROR", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
-#define LOG_POSITION()          Log::log("POSITION", __FILENAME__, __LINE__, "")
 
 class Log {
 public:    
     static void log(const char* type, const char* file, unsigned int line, const char *str, ...);
+	static void setFileName(const std::string &fileName);
+	static void logToPrint(const bool logToPrint);
+	static void logToFile(const bool logToFile);
+
+private:
+	static bool _logToPrint;
+	static bool _logToFile;
+	static std::string _fileName;
 
 };
-

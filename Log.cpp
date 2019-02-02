@@ -8,7 +8,7 @@
 
 bool Log::_logToPrint = true;
 bool Log::_logToFile = false;
-std::string Log::_fileName = "log.txt";
+char Log::_fileName[BUFFER_SIZE];
 
 void Log::log(const char*const type, const char*const file, const unsigned int line, const char *const str, ...) {
 	//Apply argument to user string.
@@ -38,14 +38,11 @@ void Log::clearFile() {
 	outfile << "";
 }
 
-void Log::setFileName(const std::string &fileName) {
-	_fileName = fileName;
-}
-
 void Log::logToPrint(const bool logToPrint) {
 	_logToPrint = logToPrint;
 }
 
-void Log::logToFile(const bool logToFile) {
-	_logToFile = logToFile;
+void Log::logToFile(const std::string &fileName) {
+	_logToFile = true;
+	strcpy_s(_fileName, BUFFER_SIZE, fileName.c_str());
 }

@@ -2,6 +2,7 @@
 
 #ifdef DEBUG_MEMORY
 
+#include <algorithm> //std::max
 #include "Log.h"
 
 /*************************************************
@@ -168,10 +169,10 @@ public:
 					++numP;
 				}
 			}
-			LOG_ERROR("MEMORY LEAK DETECTED! p: %lu, p[]: %lu", numP, numArrP);
+			LOG_ERROR("MEMORY LEAK DETECTED! p: %zu, p[]: %zu", numP, numArrP);
 		}
 		LOG_INFO("Max memory usage: %.1fkB", _maxMemoryUsage / 1000.0);
-		LOG_INFO("Max num pointers used: %lu", _maxPointers);
+		LOG_INFO("Max num pointers used: %zu", _maxPointers);
 	}
 
 	void displayPointers() const {
@@ -179,7 +180,7 @@ public:
 		LOG_INFO("Address\t\tSize\tisArray");
 		for (size_t i = 0; i < _map.size(); ++i) {
 			_map.getByIndex(i, &pointer);
-			LOG_INFO("%p\t%d\t%d", pointer.address, pointer.size, pointer.isArray);
+			LOG_INFO("%p\t%zu\t%d", pointer.address, pointer.size, pointer.isArray);
 		}
 	}
 

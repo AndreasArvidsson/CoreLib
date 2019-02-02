@@ -7,17 +7,15 @@
 #define LOG_ERROR(str, ...)     Log::log("ERROR", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
 
 class Log {
-public:    
-
-    static void log(const char* type, const char* file, unsigned int line, const char *str, ...);
+public:
+	static void log(const char* type, const char* file, unsigned int line, const char *str, ...);
 	static void clearFile();
-	static void setFileName(const std::string &fileName);
 	static void logToPrint(const bool logToPrint);
-	static void logToFile(const bool logToFile);
+	static void logToFile(const std::string &fileName);
 
 private:
 	static bool _logToPrint;
 	static bool _logToFile;
-	static std::string _fileName;
+	static char _fileName[];
 
 };

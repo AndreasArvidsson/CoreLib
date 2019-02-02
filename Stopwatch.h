@@ -3,6 +3,7 @@
 #include <chrono>
 
 #undef max // to get duration::max() to work
+#define BUFFER_SIZE 128
 
 class Stopwatch {
 public:
@@ -22,7 +23,7 @@ public:
 
 	inline void stop() {
 		const std::chrono::duration<double, std::milli> duration = std::chrono::high_resolution_clock::now() - _t1;
-		printf("%s | %.2fms\n", _name.c_str(), duration.count());
+		printf("%s | %.2fms\n", _name, duration.count());
 	}
 
 	inline void intervalStart() {
@@ -48,10 +49,10 @@ public:
 
 	inline void stopInterval() {
 		if (_index) {
-			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms, Mean: %.2fms\n", _name.c_str(), _interval.count(), _intervalMin.count(), _intervalMax.count(), (_interval / _index).count());
+			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms, Mean: %.2fms\n", _name, _interval.count(), _intervalMin.count(), _intervalMax.count(), (_interval / _index).count());
 		}
 		else {
-			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms\n", _name.c_str(), _interval.count(), _intervalMin.count(), _intervalMax.count());
+			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms\n", _name, _interval.count(), _intervalMin.count(), _intervalMax.count());
 		}
 		reset();
 	}
@@ -69,7 +70,7 @@ public:
 	}
 
 private:
-	std::string _name;
+	char _name[BUFFER_SIZE];
 	std::chrono::high_resolution_clock::time_point _t1;
 	std::chrono::duration<double, std::milli> _interval, _intervalMin, _intervalMax;
 	size_t _resetAt;
@@ -77,7 +78,7 @@ private:
 	std::chrono::milliseconds _tmp;
 
 	void init(const std::string &name, const size_t resetAt) {
-		_name = name;
+		strcpy_s(_name, BUFFER_SIZE, name.c_str());
 		_resetAt = resetAt;
 		reset();
 	}
@@ -90,80 +91,3 @@ private:
 	}
 
 };
-
-//#pragma once
-//#include "Date.h"
-//#include <string>
-//
-//#include <chrono>
-//
-//class Stopwatch {
-//public:
-//
-//	Stopwatch(const size_t resetAt = 0) {
-//		_name = "Timer";
-//		_resetAt = resetAt;
-//		_t1 = 0;
-//		_index = _interval = 0;
-//	}
-//
-//	Stopwatch(const std::string &name, const size_t resetAt = 0) {
-//		_name = name;
-//		_resetAt = resetAt;
-//		_t1 = 0;
-//		_index = _interval = 0;
-//	}
-//
-//	inline void start() {
-//		_t1 = Date::getCurrentTimeMillis();
-//		_index = 0;
-//	}
-//
-//	inline void stop() {
-//		time_t duration = Date::getCurrentTimeMillis() - _t1;
-//		printf("%s: %lldms\n", _name.c_str(), Date::getCurrentTimeMillis() - _t1);
-//	}
-//
-//	inline void stopInterval() {
-//		if (_index) {
-//			printf("%s interval: %lldms, mean: %.2fms\n", _name.c_str(), _interval, (float)_interval / _index);
-//		}
-//		else {
-//			printf("%s interval: %lldms\n", _name.c_str(), _interval);
-//		}
-//		_interval = 0;
-//		_index = 0;
-//	}
-//
-//	inline void resetAt(const size_t counts) {
-//		_resetAt = counts;
-//	}
-//
-//	inline void tick() {
-//		++_index;
-//		if (_resetAt && _index >= _resetAt) {
-//			stop();
-//			start();
-//		}
-//	}
-//
-//	inline void intervalStart() {
-//		_t1 = Date::getCurrentTimeMillis();
-//	}
-//
-//	inline void intervalEnd() {
-//		_interval += Date::getCurrentTimeMillis() - _t1;
-//		++_index;
-//		if (_resetAt && _index >= _resetAt) {
-//			stopInterval();
-//		}
-//	}
-//
-//private:
-//	time_t _t1;
-//	std::string _name;
-//	size_t _resetAt;
-//	size_t _index;
-//	time_t _interval;
-//
-//};

@@ -187,9 +187,9 @@ public:
 	void assertNoLeak() const {
 		if (getInstance()->hasLeak()) {
 			getInstance()->displayInfo();
-			printf("\n");
+			LOG_NL();
 			getInstance()->displayPointers();
-			printf("\n");
+			LOG_NL();
 			system("PAUSE");
 			exit(EXIT_FAILURE);
 		}

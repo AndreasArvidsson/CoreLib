@@ -22,13 +22,21 @@ void Log::log(const char*const type, const char*const file, const unsigned int l
 	char resultText[BUFFER_SIZE];
 	snprintf(resultText, BUFFER_SIZE, "%s | %s | %s(%d) | %s\n", Date::getLocalDateTimeString().c_str(), type, file, line, userText);
 
+	logText(resultText);
+}
+
+void Log::newLine() {
+	logText("\n");
+}
+
+void Log::logText(const char * const text) {
 	if (_logToPrint) {
-		printf(resultText);
+		printf(text);
 	}
 	if (_logToFile) {
 		std::ofstream outfile;
 		outfile.open(_fileName, std::ios_base::app);
-		outfile << resultText;
+		outfile << text;
 	}
 }
 

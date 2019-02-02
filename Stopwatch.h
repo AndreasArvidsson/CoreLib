@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <chrono>
+#include "Log.h"
 
 #undef max // to get duration::max() to work
 #define BUFFER_SIZE 128
@@ -23,7 +24,7 @@ public:
 
 	inline void stop() {
 		const std::chrono::duration<double, std::milli> duration = std::chrono::high_resolution_clock::now() - _t1;
-		printf("%s | %.2fms\n", _name, duration.count());
+		LOG_INFO("%s - %.2fms", _name, duration.count());
 	}
 
 	inline void intervalStart() {
@@ -49,10 +50,10 @@ public:
 
 	inline void stopInterval() {
 		if (_index) {
-			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms, Mean: %.2fms\n", _name, _interval.count(), _intervalMin.count(), _intervalMax.count(), (_interval / _index).count());
+			LOG_INFO("%s interval - Total: %.0fms, Min: %.2fms, Max: %.2fms, Mean: %.2fms", _name, _interval.count(), _intervalMin.count(), _intervalMax.count(), (_interval / _index).count());
 		}
 		else {
-			printf("%s interval | Total: %.0fms, Min: %.2fms, Max: %.2fms\n", _name, _interval.count(), _intervalMin.count(), _intervalMax.count());
+			LOG_INFO("%s interval - Total: %.0fms, Min: %.2fms, Max: %.2fms", _name, _interval.count(), _intervalMin.count(), _intervalMax.count());
 		}
 		reset();
 	}

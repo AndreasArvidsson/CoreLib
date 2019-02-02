@@ -8,7 +8,9 @@
 
 class Log {
 public:    
+
     static void log(const char* type, const char* file, unsigned int line, const char *str, ...);
+	static void clearFile();
 	static void setFileName(const std::string &fileName);
 	static void logToPrint(const bool logToPrint);
 	static void logToFile(const bool logToFile);

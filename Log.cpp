@@ -32,6 +32,12 @@ void Log::log(const char*const type, const char*const file, const unsigned int l
 	}
 }
 
+void Log::clearFile() {
+	std::ofstream outfile;
+	outfile.open(_fileName);
+	outfile << "";
+}
+
 void Log::setFileName(const std::string &fileName) {
 	_fileName = fileName;
 }

@@ -1,6 +1,7 @@
 #include "Date.h"
 #include <cstring> //strstr
 #include <cmath> //pow
+#define NOMINMAX
 #include "windows.h"
 #include "Timezoneapi.h" //GetTimeZoneInformation
 

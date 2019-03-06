@@ -43,6 +43,11 @@ public:
 		_available = available;
 	}
 
+	void setCapacity(const size_t capacity) {
+		std::unique_lock<decltype(_mutex)> lock(_mutex);
+		_capacity = capacity;
+	}
+
 	void clear() {
 		std::unique_lock<decltype(_mutex)> lock(_mutex);
 		_available = 0;

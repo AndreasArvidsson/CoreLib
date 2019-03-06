@@ -6,7 +6,7 @@ public:
 
     static inline const char getDigit() {
         if (_kbhit()) {
-            char c;
+            char c = '\0';
             //Get last char
             while (_kbhit()) {
 				const char tmp = _getch();

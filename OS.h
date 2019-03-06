@@ -27,7 +27,13 @@ public:
 	}
 
 	static void showWindow() {
-		ShowWindow(GetConsoleWindow(), SW_SHOWNORMAL);
+		const HWND hwnd = GetConsoleWindow();
+		ShowWindow(hwnd, SW_RESTORE);
+		SetForegroundWindow(hwnd);
+	}
+
+	static const boolean isWindowMinimized() {
+		return IsIconic(GetConsoleWindow());
 	}
 
 	static void flushDenormalizedZero() {

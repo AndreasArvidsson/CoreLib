@@ -59,9 +59,7 @@ public:
 	}
 
 	static const bool regValueExists(const HKEY hKey, const std::string &path, const std::string &name) {
-		char value[1024];
-		DWORD length;
-		const LSTATUS status = RegGetValue(hKey, path.c_str(), name.c_str(), RRF_RT_ANY, NULL, value, &length);
+		const LSTATUS status = RegGetValue(hKey, path.c_str(), name.c_str(), RRF_RT_ANY, NULL, nullptr, nullptr);
 		switch (status) {
 		case ERROR_SUCCESS:
 			return true;

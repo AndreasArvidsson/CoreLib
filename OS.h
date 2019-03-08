@@ -27,10 +27,12 @@ public:
 	}
 
 	static void showWindow() {
-		const HWND hwnd = GetConsoleWindow();
-		ShowWindow(hwnd, SW_RESTORE);
-		SetForegroundWindow(hwnd);
+		ShowWindow(GetConsoleWindow(), SW_RESTORE);
 	}
+
+    static void showInForeground() {
+        SetForegroundWindow(GetConsoleWindow());
+    }
 
 	static const boolean isWindowMinimized() {
 		return IsIconic(GetConsoleWindow());

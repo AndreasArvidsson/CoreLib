@@ -15,8 +15,11 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="JsonNode.cpp" />
     <ClCompile Include="JsonParser.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="OS.cpp" />
+    <ClCompile Include="Semaphore.cpp" />
+    <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="Str.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -9,13 +9,8 @@
 class Stopwatch {
 public:
 
-	Stopwatch(const size_t resetAt = 0) {
-		init("Timer", resetAt);
-	}
-
-	Stopwatch(const std::string &name, const size_t resetAt = 0) {
-		init(name, resetAt);
-	}
+    Stopwatch(const size_t resetAt = 0);
+	Stopwatch(const std::string &name, const size_t resetAt = 0);
 
 	inline void start() {
 		_t1 = std::chrono::high_resolution_clock::now();
@@ -78,11 +73,7 @@ private:
 	size_t _index;
 	std::chrono::milliseconds _tmp;
 
-	void init(const std::string &name, const size_t resetAt) {
-		strcpy_s(_name, BUFFER_SIZE, name.c_str());
-		_resetAt = resetAt;
-		reset();
-	}
+    void init(const std::string &name, const size_t resetAt);
 
 	inline void reset() {
 		_intervalMin = { std::chrono::duration_values<double>::max() };

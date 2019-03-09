@@ -1,6 +1,6 @@
 #pragma once
 #define NOMINMAX
-#include <windows.h>
+#include <windows.h> //HKEY
 #include <string>
 
 namespace OS {

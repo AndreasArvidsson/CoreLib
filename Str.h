@@ -4,6 +4,11 @@
 class String {
 public:
 
+    static std::string toUpperCase(const std::string &str);
+    static std::string toLowerCase(const std::string &str);
+    static std::string format(const char *const str, ...);
+    static const bool equalsIgnoreCase(const std::string &str1, const std::string &str2);
+
 	String();
 	String(const String &str);
 	String(const std::string &str);

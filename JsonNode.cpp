@@ -57,12 +57,14 @@ JsonNode::JsonNode(const bool value) {
 }
 
 JsonNode::~JsonNode() {
-	for (auto e : _fields) {
+	for (auto &e : _fields) {
 		delete e.second;
 	}
+    _fields.clear();
 	for (JsonNode *p : _items) {
 		delete p;
 	}
+    _items.clear();
 }
 
 const JsonNodeType JsonNode::getNodeType() const {
@@ -180,6 +182,19 @@ void JsonNode::add(JsonNode *pJsonNode) {
 		throw Error("Not an array");
 	}
 	_items.push_back(pJsonNode);
+}
+
+void JsonNode::renameField(const std::string &oldField, const std::string &newField) {
+    if (!isObject()) {
+        throw Error("Not an object");
+    }
+    if (!has(oldField)) {
+        throw Error("Cant rename unexisting field");
+    }
+    _fields[newField] = _fields[oldField];
+    _fields.erase(oldField);
+    const auto it = std::find(_fieldOrder.begin(), _fieldOrder.end(), oldField);
+    *it = newField;
 }
 
 void JsonNode::put(const std::string &fieldName, JsonNode *pJsonNode) {

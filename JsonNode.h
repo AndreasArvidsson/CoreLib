@@ -74,6 +74,7 @@ public:
 	JsonNode* path(const size_t index) const;
 	JsonNode* path(const std::string &fieldName) const;
 	const std::vector<std::string> getOrder() const;
+    void renameField(const std::string &oldField, const std::string &newField);
 
 	const std::unordered_map<std::string, JsonNode*> getFields() const;
 

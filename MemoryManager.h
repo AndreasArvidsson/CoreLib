@@ -177,7 +177,7 @@ public:
 
 	void displayPointers() const {
 		Pointer pointer;
-		LOG_INFO("Address\t\tSize\tisArray");
+		LOG_INFO("Address\t\t\tSize\tisArray");
 		for (size_t i = 0; i < _map.size(); ++i) {
 			_map.getByIndex(i, &pointer);
 			LOG_INFO("%p\t%zu\t%d", pointer.address, pointer.size, pointer.isArray);

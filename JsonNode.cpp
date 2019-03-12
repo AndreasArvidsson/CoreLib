@@ -140,14 +140,14 @@ const bool JsonNode::has(const std::string &fieldName) const {
 
 JsonNode* JsonNode::get(const size_t index) const {
 	if (!isArray()) {
-		throw Error("Not an array");
+		throw Error("JsonNode.get(int): Not an array");
 	}
 	return _items[index];
 }
 
 JsonNode* JsonNode::get(const std::string &fieldName) const {
 	if (!isObject()) {
-		throw Error("Not an object");
+		throw Error("JsonNode.get(string): Not an object");
 	}
 	return _fields.at(fieldName);
 }
@@ -179,17 +179,17 @@ const std::unordered_map<std::string, JsonNode*> JsonNode::getFields() const {
 
 void JsonNode::add(JsonNode *pJsonNode) {
 	if (!isArray()) {
-		throw Error("Not an array");
+		throw Error("JsonNode.add(): Not an array");
 	}
 	_items.push_back(pJsonNode);
 }
 
 void JsonNode::renameField(const std::string &oldField, const std::string &newField) {
     if (!isObject()) {
-        throw Error("Not an object");
+        throw Error("JsonNode.renameField(): Not an object");
     }
     if (!has(oldField)) {
-        throw Error("Cant rename unexisting field");
+        throw Error("JsonNode.renameField(): Can't rename unexisting field");
     }
     _fields[newField] = _fields[oldField];
     _fields.erase(oldField);
@@ -199,7 +199,7 @@ void JsonNode::renameField(const std::string &oldField, const std::string &newFi
 
 void JsonNode::put(const std::string &fieldName, JsonNode *pJsonNode) {
 	if (!isObject()) {
-		throw Error("Not an object");
+		throw Error("JsonNode.put(): Not an object");
 	}
 	if (!has(fieldName)) {
 		_fieldOrder.push_back(fieldName);
@@ -209,14 +209,14 @@ void JsonNode::put(const std::string &fieldName, JsonNode *pJsonNode) {
 
 void JsonNode::remove(const size_t index) {
 	if (!isArray()) {
-		throw Error("Not an array");
+		throw Error("JsonNode.remove(int): Not an array");
 	}
 	_items.erase(_items.begin() + index);
 }
 
 void JsonNode::remove(const std::string &fieldName) {
 	if (!isObject()) {
-		throw Error("Not an object");
+		throw Error("JsonNode.remove(string): Not an object");
 	}
 	if (_fields.erase(fieldName)) {
 		_fieldOrder.erase(std::remove(_fieldOrder.begin(), _fieldOrder.end(), fieldName), _fieldOrder.end());
@@ -225,7 +225,7 @@ void JsonNode::remove(const std::string &fieldName) {
 
 void JsonNode::clear() {
 	if (!isObject() && !isArray()) {
-		throw Error("Not an object or array");
+		throw Error("JsonNode.clear(): Not an object or array");
 	}
 	_fields.clear();
 	_fieldOrder.clear();

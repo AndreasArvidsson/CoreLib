@@ -59,7 +59,7 @@ const bool File::getData(std::string &result) const {
 	}
 	result = "";
 	char c;
-	while ((c = fgetc(pFile)) != EOF) {
+	while ((c = (char)fgetc(pFile)) != EOF) {
 		result += c;
 	}
 	fclose(pFile);
@@ -73,7 +73,7 @@ const bool File::getData(std::vector<std::string> &result) const {
 	}
 	char c;
 	std::string row;
-	while ((c = fgetc(pFile)) != EOF) {
+	while ((c = (char)fgetc(pFile)) != EOF) {
 		if (c == '\n') {
 			result.push_back(row);
 			row = std::string();

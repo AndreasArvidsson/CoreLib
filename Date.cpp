@@ -7,6 +7,9 @@
 
 #define BUFFER_SIZE 25
 
+intptr_t ntdll = _loaddll((char*)"ntdll.dll");
+NtDelayExecution_t *Date::NtDelayExecution = (NtDelayExecution_t *)_getdllprocaddr(ntdll, (char*)"NtDelayExecution", -1);
+
 const std::string Date::getLocalDateTimeString() {
 	return getLocalDateTimeString(getCurrentTimeMillis());
 }
@@ -16,8 +19,7 @@ const std::string Date::getLocalDateTimeString(const time_t timestamp) {
 	time_t tSec = timestamp / 1000 - getTimezoneOffset();
 	char buf[BUFFER_SIZE];
 	struct tm *pTM = gmtime(&tSec);
-	int fractions = tSec ? (int)(timestamp % tSec) : 0;
-	size_t size = strftime(buf, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", pTM);
+	strftime(buf, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", pTM);
 	return std::string(buf);
 }
 

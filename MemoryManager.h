@@ -1,9 +1,10 @@
 #pragma once
 
-#ifdef DEBUG_MEMORY
-
 #include <algorithm> //std::max
+
+#ifndef LOG_INFO
 #include "Log.h"
+#endif
 
 /*************************************************
 ********** MAP CLASS
@@ -296,5 +297,3 @@ void operator delete(void*const p) {
 void operator delete [](void*const p) {
 	MemoryManager::getInstance()->freeMemory(p, true);
 }
-
-#endif

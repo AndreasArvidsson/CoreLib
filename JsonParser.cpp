@@ -89,7 +89,7 @@ std::string JsonParser::matchFieldID(const char *&p, size_t &row) {
 	match(p, '"', row);
 	std::string name = next(p, '"', row);
 	if (name.size() == 0) {
-		throw Error("JSON(%lu) - Expected ID near '%s'", row, next(p, '\n', row));
+		throw Error("JSON(%lu) - Expected ID near '%s'", row, next(p, '\n', row).c_str());
 	}
 	match(p, '"', row);
 	return name;

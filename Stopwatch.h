@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
 #include <chrono>
+
+#ifndef LOG_INFO
 #include "Log.h"
+#endif
 
 #undef max // to get duration::max() to work
 #define BUFFER_SIZE 128

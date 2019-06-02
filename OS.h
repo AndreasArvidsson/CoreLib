@@ -17,6 +17,7 @@ namespace OS {
 
     const std::string getExePath();
     const std::string getExeDirPath();
+    const std::string getLastError();
 
     const bool regValueExists(const HKEY hKey, const std::string &path, const std::string &name);
     const std::string regGetValue(const HKEY hKey, const std::string &path, const std::string &name);

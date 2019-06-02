@@ -3,19 +3,29 @@
 #include <chrono>
 #include <thread>
 
+//NtDelayExecution_t
+extern "C" {
+    typedef long long intptr_t;
+    typedef union _LARGE_INTEGER *PLARGE_INTEGER;
+    typedef long NTSTATUS;
+    intptr_t __cdecl _loaddll(char *);
+    int(__cdecl * __cdecl _getdllprocaddr(intptr_t, char *, intptr_t))(void);
+    typedef NTSTATUS __stdcall NtDelayExecution_t(unsigned char Alertable, PLARGE_INTEGER Interval);
+}
+
 class Date {
 public:
 
-	static inline const time_t Date::getCurrentTimeMillis() {
+	static inline const time_t getCurrentTimeMillis() {
 		return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	}
+    static inline void sleepMillis(const time_t ms) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+    }
 
-	static inline void sleepMicros(const time_t us) {
-		std::this_thread::sleep_for(std::chrono::microseconds(us));
-	}
-
-	static inline void sleepMillis(const time_t ms) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+	static inline void sleepMilli() {
+        static long long delay = 1 * -(1000 / 100) /* relative 100-ns intervals */;
+        NtDelayExecution(0, (PLARGE_INTEGER)&delay);
 	}
 
 	static inline void sleepSeconds(const time_t s) {
@@ -30,5 +40,6 @@ public:
 
 private:
 	static const long getTimezoneOffset();
+    static NtDelayExecution_t *NtDelayExecution;
 
 };

@@ -8,10 +8,12 @@
 #define __LOG_ERROR__(str, ...) Log::log("ERROR", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
 #define __LOG_NL__()            Log::newLine();
 
+#ifndef LOG_INFO
 #define LOG_INFO				__LOG_INFO__
 #define LOG_WARN				__LOG_WARN__
 #define LOG_ERROR				__LOG_ERROR__
 #define LOG_NL					__LOG_NL__
+#endif
 
 class Log {
 public:

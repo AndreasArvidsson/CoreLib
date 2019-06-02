@@ -6,7 +6,7 @@ const char Keyboard::getDigit() {
         char c = '\0';
         //Get last char
         while (_kbhit()) {
-            const char tmp = _getch();
+            const char tmp = (char)_getch();
             if (tmp) {
                 c = tmp;
             }

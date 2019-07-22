@@ -34,6 +34,14 @@ std::string String::format(const char *const str, ...) {
     return std::string(buf);
 }
 
+std::string String::toString(const std::wstring& wstring) {
+    std::string res = "";
+    for (const wchar_t c : wstring) {
+        res += (char)c;
+    }
+    return res;
+}
+
 const bool String::equalsIgnoreCase(const std::string &str1, const std::string &str2) {
     if (str1.size() != str2.size()) {
         return false;
@@ -56,16 +64,10 @@ String::String(const String &str) : _str(str._str) { }
 String::String(const std::string &str) : _str(str) { }
 
 String::String(const std::wstring &str) {
-	_str = std::string(str.begin(), str.end());
-}
-
-String::String(const char *str) {
-	_str = str;
-}
-
-String::String(const wchar_t *str) {
-	const std::wstring wstr(str);
-	_str = std::string(wstr.begin(), wstr.end());
+    _str = "";
+    for (const wchar_t c : str) {
+        _str += (char)c;
+    }
 }
 
 const bool String::startsWith(const String &str) const {

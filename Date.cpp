@@ -7,8 +7,8 @@
 
 #define BUFFER_SIZE 25
 
-intptr_t ntdll = _loaddll((char*)"ntdll.dll");
-NtDelayExecution_t *Date::NtDelayExecution = (NtDelayExecution_t *)_getdllprocaddr(ntdll, (char*)"NtDelayExecution", -1);
+HINSTANCE ntdll = LoadLibrary("ntdll.dll");
+NtDelayExecution_t* Date::NtDelayExecution = (NtDelayExecution_t*)GetProcAddress(ntdll, (char*)"NtDelayExecution");
 
 const std::string Date::getLocalDateTimeString() {
 	return getLocalDateTimeString(getCurrentTimeMillis());

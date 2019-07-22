@@ -8,8 +8,6 @@ extern "C" {
     typedef long long intptr_t;
     typedef union _LARGE_INTEGER *PLARGE_INTEGER;
     typedef long NTSTATUS;
-    intptr_t __cdecl _loaddll(char *);
-    int(__cdecl * __cdecl _getdllprocaddr(intptr_t, char *, intptr_t))(void);
     typedef NTSTATUS __stdcall NtDelayExecution_t(unsigned char Alertable, PLARGE_INTEGER Interval);
 }
 

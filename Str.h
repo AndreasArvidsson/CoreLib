@@ -7,14 +7,13 @@ public:
     static std::string toUpperCase(const std::string &str);
     static std::string toLowerCase(const std::string &str);
     static std::string format(const char *const str, ...);
+    static std::string toString(const std::wstring& str);
     static const bool equalsIgnoreCase(const std::string &str1, const std::string &str2);
 
 	String();
 	String(const String &str);
 	String(const std::string &str);
 	String(const std::wstring &str);
-	String(const char *str);
-	String(const wchar_t *str);
 
 	const bool startsWith(const String &str) const;
 	const bool endsWith(const String &str) const;

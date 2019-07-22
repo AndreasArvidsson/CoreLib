@@ -26,7 +26,4 @@ public:
 private:
     std::string _path;
 
-    const std::string toString(const std::wstring &wstring) const;
-    const std::string toString(const char *str) const;
-
 };

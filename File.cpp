@@ -1,5 +1,6 @@
 #include "File.h"
 #include <fstream> //ofstream 
+#include "Str.h"
 
 #ifdef _WIN32
 #include <filesystem>
@@ -24,11 +25,11 @@ File::File(const char *path) {
 }
 
 File::File(const std::wstring &path) {
-	_path = toString(path);
+	_path = String::toString(path);
 }
 
 File::File(const wchar_t *path) {
-	_path = toString(path);
+	_path = String::toString(path);
 }
 
 const std::string File::getPath() const {
@@ -110,14 +111,6 @@ const bool File::setData(const std::string &content) const {
 		return true;
 	}
 	return false;
-}
-
-const std::string File::toString(const std::wstring &wstring) const {
-	return std::string(wstring.begin(), wstring.end());
-}
-
-const std::string File::toString(const char *str) const {
-	return std::string(str);
 }
 
 const bool File::exists() const {

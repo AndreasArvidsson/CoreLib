@@ -4,7 +4,6 @@
 
 #ifdef _WIN32
 #include <filesystem>
-namespace fs = std::experimental::filesystem::v1;
 #else
 #include <sys/stat.h>
 #endif
@@ -115,7 +114,7 @@ const bool File::setData(const std::string &content) const {
 
 const bool File::exists() const {
 #ifdef _WIN32
-	return fs::exists(_path);
+	return  std::filesystem::exists(_path);
 #else
 	struct stat buffer;
 	return (stat(_path.c_str(), &buffer) == 0);

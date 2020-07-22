@@ -11,31 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Date.cpp" />
-    <ClCompile Include="File.cpp" />
-    <ClCompile Include="JsonNode.cpp" />
-    <ClCompile Include="JsonParser.cpp" />
-    <ClCompile Include="Keyboard.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="OS.cpp" />
-    <ClCompile Include="Semaphore.cpp" />
-    <ClCompile Include="Stopwatch.cpp" />
-    <ClCompile Include="Str.cpp" />
+    <ClCompile Include="src/Date.cpp" />
+    <ClCompile Include="src/File.cpp" />
+    <ClCompile Include="src/JsonNode.cpp" />
+    <ClCompile Include="src/JsonParser.cpp" />
+    <ClCompile Include="src/Keyboard.cpp" />
+    <ClCompile Include="src/Log.cpp" />
+    <ClCompile Include="src/OS.cpp" />
+    <ClCompile Include="src/Semaphore.cpp" />
+    <ClCompile Include="src/Stopwatch.cpp" />
+    <ClCompile Include="src/Str.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Date.h" />
-    <ClInclude Include="Error.h" />
-    <ClInclude Include="File.h" />
-    <ClInclude Include="JsonNode.h" />
-    <ClInclude Include="JsonParser.h" />
-    <ClInclude Include="Keyboard.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="MemoryManager.h" />
-    <ClInclude Include="OS.h" />
-    <ClInclude Include="Semaphore.h" />
-    <ClInclude Include="SpinLock.h" />
-    <ClInclude Include="Stopwatch.h" />
-    <ClInclude Include="Str.h" />
+    <ClInclude Include="src/Date.h" />
+    <ClInclude Include="src/Error.h" />
+    <ClInclude Include="src/File.h" />
+    <ClInclude Include="src/JsonNode.h" />
+    <ClInclude Include="src/JsonParser.h" />
+    <ClInclude Include="src/Keyboard.h" />
+    <ClInclude Include="src/Log.h" />
+    <ClInclude Include="src/MemoryManager.h" />
+    <ClInclude Include="src/OS.h" />
+    <ClInclude Include="src/Semaphore.h" />
+    <ClInclude Include="src/SpinLock.h" />
+    <ClInclude Include="src/Stopwatch.h" />
+    <ClInclude Include="src/Str.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

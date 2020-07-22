@@ -1,6 +1,8 @@
 #pragma once
+#define NOMINMAX
+#include <algorithm> //max
 
-#include <algorithm> //std::max
+using std::max;
 
 #ifndef LOG_INFO
 #include "Log.h"
@@ -211,8 +213,8 @@ public:
 
 		//Update stats
 		_memoryUsage += size;
-		_maxMemoryUsage = std::max(_maxMemoryUsage, _memoryUsage);
-		_maxPointers = std::max(_maxPointers, _map.size());
+		_maxMemoryUsage = max(_maxMemoryUsage, _memoryUsage);
+		_maxPointers = max(_maxPointers, _map.size());
 		return p;
 	}
 

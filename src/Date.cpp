@@ -1,33 +1,35 @@
+#define NOMINMAX
 #include "Date.h"
 #include <cstring> //strstr
 #include <cmath> //pow
-#define NOMINMAX
 #include "windows.h"
 #include "Timezoneapi.h" //GetTimeZoneInformation
+
+using std::pow;
 
 #define BUFFER_SIZE 25
 
 HINSTANCE ntdll = LoadLibrary("ntdll.dll");
 NtDelayExecution_t* Date::NtDelayExecution = (NtDelayExecution_t*)GetProcAddress(ntdll, (char*)"NtDelayExecution");
 
-const std::string Date::getLocalDateTimeString() {
+const string Date::getLocalDateTimeString() {
 	return getLocalDateTimeString(getCurrentTimeMillis());
 }
 
-const std::string Date::getLocalDateTimeString(const time_t timestamp) {
+const string Date::getLocalDateTimeString(const time_t timestamp) {
 	//strftime can only handle seconds.
 	time_t tSec = timestamp / 1000 - getTimezoneOffset();
 	char buf[BUFFER_SIZE];
 	struct tm *pTM = gmtime(&tSec);
 	strftime(buf, BUFFER_SIZE, "%Y-%m-%d %H:%M:%S", pTM);
-	return std::string(buf);
+	return string(buf);
 }
 
-const std::string Date::getIsoString() {
+const string Date::getIsoString() {
 	return getIsoString(getCurrentTimeMillis());
 }
 
-const std::string Date::getIsoString(const time_t timestamp) {
+const string Date::getIsoString(const time_t timestamp) {
 	//strftime can only handle seconds.
 	time_t tSec = timestamp / 1000;
 	char buf[BUFFER_SIZE];
@@ -40,7 +42,7 @@ const std::string Date::getIsoString(const time_t timestamp) {
 	else {
 		sprintf(buf + size, "Z");
 	}
-	return std::string(buf);
+	return string(buf);
 }
 
 const bool Date::fromIsoString(const char *isoString, time_t *timestampOut) {
@@ -66,11 +68,11 @@ const bool Date::fromIsoString(const char *isoString, time_t *timestampOut) {
 		return false;
 	}
 	if (f) {
-		const char *ptr = std::strstr(isoString, ".") + 1;
+		const char *ptr = strstr(isoString, ".") + 1;
 		int i;
 		for (i = 0; i < 3; ++i) {
 			if (ptr[i] < '0' || ptr[i] > '9') {
-				f *= (int)std::pow(10, 3 - i);
+				f *= (int)pow(10, 3 - i);
 				break;
 			}
 		}

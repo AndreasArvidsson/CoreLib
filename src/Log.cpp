@@ -1,8 +1,11 @@
 #include "Log.h"
 #include <cstdarg>
 #include <stdio.h>
-#include <fstream> // std::ofstream
+#include <fstream> // ofstream
 #include "Date.h"
+
+using std::ofstream;
+using std::ios_base;
 
 #define BUFFER_SIZE 512
 
@@ -34,14 +37,14 @@ void Log::logText(const char * const text) {
 		printf(text);
 	}
 	if (_logToFile) {
-		std::ofstream outfile;
-		outfile.open(_fileName, std::ios_base::app);
+		ofstream outfile;
+		outfile.open(_fileName, ios_base::app);
 		outfile << text;
 	}
 }
 
 void Log::clearFile() {
-	std::ofstream outfile;
+	ofstream outfile;
 	outfile.open(_fileName);
 	outfile << "";
 }
@@ -50,7 +53,7 @@ void Log::logToPrint(const bool logToPrint) {
 	_logToPrint = logToPrint;
 }
 
-void Log::logToFile(const std::string &fileName) {
+void Log::logToFile(const string &fileName) {
 	_logToFile = true;
 	strcpy_s(_fileName, BUFFER_SIZE, fileName.c_str());
 }

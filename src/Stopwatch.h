@@ -6,14 +6,16 @@
 #include "Log.h"
 #endif
 
-#undef max // to get duration::max() to work
+using std::string;
+using std::milli;
+
 #define BUFFER_SIZE 128
 
 class Stopwatch {
 public:
 
     Stopwatch(const size_t resetAt = 0);
-	Stopwatch(const std::string &name, const size_t resetAt = 0);
+	Stopwatch(const string &name, const size_t resetAt = 0);
 
 	inline void start() {
 		_t1 = std::chrono::high_resolution_clock::now();
@@ -21,7 +23,7 @@ public:
 	}
 
 	inline void stop() {
-		const std::chrono::duration<double, std::milli> duration = std::chrono::high_resolution_clock::now() - _t1;
+		const std::chrono::duration<double, milli> duration = std::chrono::high_resolution_clock::now() - _t1;
 		LOG_INFO("%s - %.2fms", _name, duration.count());
 	}
 
@@ -30,7 +32,7 @@ public:
 	}
 
 	inline void intervalEnd() {
-		const std::chrono::duration<double, std::milli> duration = std::chrono::high_resolution_clock::now() - _t1;
+		const std::chrono::duration<double, milli> duration = std::chrono::high_resolution_clock::now() - _t1;
 		_interval += duration;
 		if (duration < _intervalMin) {
 			_intervalMin = duration;
@@ -71,18 +73,17 @@ public:
 private:
 	char _name[BUFFER_SIZE];
 	std::chrono::high_resolution_clock::time_point _t1;
-	std::chrono::duration<double, std::milli> _interval, _intervalMin, _intervalMax;
+	std::chrono::duration<double, milli> _interval, _intervalMin, _intervalMax;
 	size_t _resetAt;
 	size_t _index;
 	std::chrono::milliseconds _tmp;
 
-    void init(const std::string &name, const size_t resetAt);
+    void init(const string &name, const size_t resetAt);
 
 	inline void reset() {
 		_intervalMin = { std::chrono::duration_values<double>::max() };
 		_interval = _intervalMax = std::chrono::duration_values<std::chrono::milliseconds>::zero();
 		_index = 0;
-		//_t1 = 0;
 	}
 
 };

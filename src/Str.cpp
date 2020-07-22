@@ -2,53 +2,55 @@
 #include <cstdarg>
 #include <locale>
 
+using std::locale;
+
 #define BUFFER_SIZE 512
 
 // STATIC FUNCTIONS
 
-std::string String::toUpperCase(const std::string &str) {
-    const std::locale loc;
-    std::string result(str.size(), char());
+string String::toUpperCase(const string &str) {
+    const locale loc;
+    string result(str.size(), char());
     for (size_t i = 0; i < str.size(); ++i) {
-        result[i] = std::toupper(str[i], loc);
+        result[i] = toupper(str[i], loc);
     }
     return result;
 }
 
-std::string String::toLowerCase(const std::string &str) {
-    const std::locale loc;
-    std::string result(str.size(), char());
+string String::toLowerCase(const string &str) {
+    const locale loc;
+    string result(str.size(), char());
     for (size_t i = 0; i < str.size(); ++i) {
-        result[i] = std::tolower(str[i], loc);
+        result[i] = tolower(str[i], loc);
     }
     return result;
 }
 
-std::string String::format(const char *const str, ...) {
+string String::format(const char *const str, ...) {
     //Apply argument to user string.
     va_list ap;
     char buf[BUFFER_SIZE];
     va_start(ap, str);
     vsnprintf(buf, BUFFER_SIZE, str, ap);
     va_end(ap);
-    return std::string(buf);
+    return string(buf);
 }
 
-std::string String::toString(const std::wstring& wstring) {
-    std::string res = "";
+string String::toString(const wstring& wstring) {
+    string res = "";
     for (const wchar_t c : wstring) {
         res += (char)c;
     }
     return res;
 }
 
-const bool String::equalsIgnoreCase(const std::string &str1, const std::string &str2) {
+const bool String::equalsIgnoreCase(const string &str1, const string &str2) {
     if (str1.size() != str2.size()) {
         return false;
     }
-    const std::locale loc;
+    const locale loc;
     for (size_t i = 0; i < str1.size(); ++i) {
-        if (std::tolower(str1[i], loc) != std::tolower(str2[i], loc)) {
+        if (tolower(str1[i], loc) != tolower(str2[i], loc)) {
             return false;
         }
     }
@@ -61,9 +63,9 @@ String::String() { }
 
 String::String(const String &str) : _str(str._str) { }
 
-String::String(const std::string &str) : _str(str) { }
+String::String(const string &str) : _str(str) { }
 
-String::String(const std::wstring &str) {
+String::String(const wstring &str) {
     _str = "";
     for (const wchar_t c : str) {
         _str += (char)c;

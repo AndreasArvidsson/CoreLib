@@ -3,6 +3,8 @@
 #include <chrono>
 #include <thread>
 
+using std::string;
+
 //NtDelayExecution_t
 extern "C" {
     typedef long long intptr_t;
@@ -18,7 +20,7 @@ public:
 		return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	}
     static inline void sleepMillis(const time_t ms) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
     }
 
 	static inline void sleepMilli() {
@@ -30,10 +32,10 @@ public:
 		std::this_thread::sleep_for(std::chrono::seconds(s));
 	}
 
-	static const std::string getLocalDateTimeString();
-	static const std::string getLocalDateTimeString(const time_t timestamp);
-	static const std::string getIsoString();
-	static const std::string getIsoString(const time_t timestamp);
+	static const string getLocalDateTimeString();
+	static const string getLocalDateTimeString(const time_t timestamp);
+	static const string getIsoString();
+	static const string getIsoString(const time_t timestamp);
 	static const bool fromIsoString(const char *isoString, time_t *timestampOut);
 
 private:

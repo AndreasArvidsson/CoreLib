@@ -1,12 +1,16 @@
 #include "Semaphore.h"
 
+using std::lock;
+using std::lock_guard;
+using std::unique_lock;
+
 Semaphore::Semaphore(const size_t available, const size_t capacity) {
     _available = available;
     _capacity = capacity;
 }
 
 void Semaphore::notify() {
-    std::lock_guard<decltype(_mutex)> lock(_mutex);
+    lock_guard<decltype(_mutex)> lock(_mutex);
     ++_available;
     if (_capacity > 0 && _available > _capacity) {
         _available = _capacity;
@@ -15,7 +19,7 @@ void Semaphore::notify() {
 }
 
 void Semaphore::wait() {
-    std::unique_lock<decltype(_mutex)> lock(_mutex);
+    unique_lock<decltype(_mutex)> lock(_mutex);
     //Handle fake wake-ups.
     while (_available == 0) {
         _condition.wait(lock);
@@ -24,7 +28,7 @@ void Semaphore::wait() {
 }
 
 bool Semaphore::tryWait() {
-    std::lock_guard<decltype(_mutex)> lock(_mutex);
+    lock_guard<decltype(_mutex)> lock(_mutex);
     if (_available > 0) {
         --_available;
         return true;
@@ -33,16 +37,16 @@ bool Semaphore::tryWait() {
 }
 
 void Semaphore::setAvailable(const size_t available) {
-    std::unique_lock<decltype(_mutex)> lock(_mutex);
+    unique_lock<decltype(_mutex)> lock(_mutex);
     _available = available;
 }
 
 void Semaphore::setCapacity(const size_t capacity) {
-    std::unique_lock<decltype(_mutex)> lock(_mutex);
+    unique_lock<decltype(_mutex)> lock(_mutex);
     _capacity = capacity;
 }
 
 void Semaphore::clear() {
-    std::unique_lock<decltype(_mutex)> lock(_mutex);
+    unique_lock<decltype(_mutex)> lock(_mutex);
     _available = 0;
 }

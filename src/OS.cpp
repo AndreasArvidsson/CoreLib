@@ -36,25 +36,25 @@ const bool OS::isWindowMinimized() {
     return IsIconic(GetConsoleWindow());
 }
 
-const std::string OS::getExePath() {
+const string OS::getExePath() {
     char value[1024];
     int length = GetModuleFileNameA(NULL, value, sizeof(value));
     if (length == 0) {
         throw Error("Failed to get executable path: %d", GetLastError());
     }
-    return std::string(value);
+    return string(value);
 }
 
-const std::string OS::getExeDirPath() {
-    std::string exePath = getExePath();
+const string OS::getExeDirPath() {
+    string exePath = getExePath();
     size_t i = exePath.rfind('\\');
-    if (i != std::string::npos) {
+    if (i != string::npos) {
         return exePath.substr(0, i + 1);
     }
     return exePath;
 }
 
-const bool OS::regValueExists(const HKEY hKey, const std::string &path, const std::string &name) {
+const bool OS::regValueExists(const HKEY hKey, const string &path, const string &name) {
     const LSTATUS status = RegGetValue(hKey, path.c_str(), name.c_str(), RRF_RT_ANY, NULL, nullptr, nullptr);
     switch (status) {
     case ERROR_SUCCESS:
@@ -66,43 +66,43 @@ const bool OS::regValueExists(const HKEY hKey, const std::string &path, const st
     }
 }
 
-const std::string OS::regGetValue(const HKEY hKey, const std::string &path, const std::string &name) {
+const string OS::regGetValue(const HKEY hKey, const string &path, const string &name) {
     char value[1024];
     DWORD length;
     const LSTATUS status = RegGetValue(hKey, path.c_str(), name.c_str(), RRF_RT_ANY, NULL, value, &length);
     if (status != ERROR_SUCCESS) {
         throw Error("Failed to get register value: %d", status);
     }
-    return std::string(value);
+    return string(value);
 }
 
-void OS::regSetValue(const HKEY hKey, const std::string &path, const std::string &name, const std::string &value) {
+void OS::regSetValue(const HKEY hKey, const string &path, const string &name, const string &value) {
     const LSTATUS status = RegSetKeyValueA(hKey, path.c_str(), name.c_str(), REG_SZ, value.c_str(), (DWORD)value.size());
     if (status != ERROR_SUCCESS) {
         throw Error("Failed to set register value: %d", status);
     }
 }
 
-void OS::regRemoveValue(const HKEY hKey, const std::string &path, const std::string &name) {
+void OS::regRemoveValue(const HKEY hKey, const string &path, const string &name) {
     const LSTATUS status = RegDeleteKeyValueA(hKey, path.c_str(), name.c_str());
     if (status != ERROR_SUCCESS) {
         throw Error("Failed to remove register value: %d", status);
     }
 }
 
-const std::string OS::getLastError() {
+const string OS::getLastError() {
     //Get the error message, if any.
     const DWORD errorMessageID = ::GetLastError();
 
     if (errorMessageID == 0) {
-        return std::string(); //No error message has been recorded
+        return string(); //No error message has been recorded
     }
 
     LPSTR messageBuffer = nullptr;
     size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
 
-    std::string message(messageBuffer, size);
+    string message(messageBuffer, size);
 
     //Free the buffer.
     LocalFree(messageBuffer);

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+using std::string;
+
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__))
 
 #define __LOG_INFO__(str, ...)  Log::log("INFO ", __FILENAME__, __LINE__, str, ##__VA_ARGS__)
@@ -21,7 +23,7 @@ public:
 	static void newLine();
 	static void clearFile();
 	static void logToPrint(const bool logToPrint);
-	static void logToFile(const std::string &fileName);
+	static void logToFile(const string &fileName);
 
 private:
 	static bool _logToPrint;

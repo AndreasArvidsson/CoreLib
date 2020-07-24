@@ -10,6 +10,7 @@ public:
     static string toUpperCase(const string &str);
     static string toLowerCase(const string &str);
     static string format(const char *const str, ...);
+	static string toString(const double value);
     static string toString(const wstring& str);
     static const bool equalsIgnoreCase(const string &str1, const string &str2);
 

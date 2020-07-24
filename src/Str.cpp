@@ -36,6 +36,21 @@ string String::format(const char *const str, ...) {
     return string(buf);
 }
 
+string String::toString(const double value) {
+    char buf[BUFFER_SIZE];
+    const int size = snprintf(buf, BUFFER_SIZE, "%f", value);
+    int i = size - 1;
+    while (buf[i] == '0' || buf[i] == '.') {
+        if (buf[i] == '.') {
+            buf[i] = '\0';
+            break;
+        }
+        buf[i] = '\0';
+        --i;
+    }
+    return string(buf);
+}
+
 string String::toString(const wstring& wstring) {
     string res = "";
     for (const wchar_t c : wstring) {

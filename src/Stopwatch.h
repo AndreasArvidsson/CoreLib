@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <chrono>
+#undef max
 
 #ifndef LOG_INFO
 #include "Log.h"
@@ -81,8 +82,8 @@ private:
     void init(const string &name, const size_t resetAt);
 
 	inline void reset() {
-		_intervalMin = { std::chrono::duration_values<double>::max() };
-		_interval = _intervalMax = std::chrono::duration_values<std::chrono::milliseconds>::zero();
+		_intervalMin = std::chrono::duration<double>::max() ;
+		_interval = _intervalMax = std::chrono::duration<double>::zero();
 		_index = 0;
 	}
 

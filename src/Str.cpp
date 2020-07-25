@@ -59,6 +59,17 @@ string String::toString(const wstring& wstring) {
     return res;
 }
 
+string String::join(const vector<double>& values, const string& delimiter) {
+    string res = "";
+    for (const double value : values) {
+        if (res.size()) {
+            res += delimiter;
+        }
+        res += toString(value);
+    }
+    return "[" + res + "]";
+}
+
 const bool String::equalsIgnoreCase(const string &str1, const string &str2) {
     if (str1.size() != str2.size()) {
         return false;

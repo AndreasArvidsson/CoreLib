@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
+#include <vector>
 
 using std::string;
 using std::wstring;
+using std::vector;
 
 class String {
 public:
@@ -12,6 +14,7 @@ public:
     static string format(const char *const str, ...);
 	static string toString(const double value);
     static string toString(const wstring& str);
+	static string join(const vector<double>& values, const string& delimiter = ", ");
     static const bool equalsIgnoreCase(const string &str1, const string &str2);
 
 	String();

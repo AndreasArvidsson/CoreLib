@@ -95,13 +95,16 @@ const bool File::getData(vector<string> &result) const {
 }
 
 const size_t File::getData(unique_ptr<char[]>* result) const {
-	streampos size;
+	size_t size;
 	ifstream file(_path.c_str(), ios::in | ios::binary | ios::ate);
 	if (file.is_open()) {
 		size = file.tellg();
-		*result = make_unique<char[]>(size);
-		file.seekg(0, ios::beg);
-		file.read(result->get(), size);
+		if (size) {
+			*result = make_unique<char[]>(size + 1);
+			file.seekg(0, ios::beg);
+			file.read(result->get(), size);
+			result->get()[size] = '\0';
+		}
 		file.close();
 		return size;
 	}

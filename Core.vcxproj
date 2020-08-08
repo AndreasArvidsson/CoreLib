@@ -21,6 +21,7 @@
     <ClCompile Include="src/Semaphore.cpp" />
     <ClCompile Include="src/Stopwatch.cpp" />
     <ClCompile Include="src/Str.cpp" />
+    <ClCompile Include="src\CliOpts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src/Date.h" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src/SpinLock.h" />
     <ClInclude Include="src/Stopwatch.h" />
     <ClInclude Include="src/Str.h" />
+    <ClInclude Include="src\CliOpts.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

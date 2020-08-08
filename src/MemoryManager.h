@@ -271,7 +271,6 @@ private:
 		_paddingSize = sizeof(_padding);
 		_memoryUsage = _maxMemoryUsage = _maxPointers = 0;
 		_map.init(500);
-		//_mapArr.init(500);
 	}
 
 };

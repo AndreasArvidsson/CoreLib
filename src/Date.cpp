@@ -12,11 +12,11 @@ using std::pow;
 HINSTANCE ntdll = LoadLibrary("ntdll.dll");
 NtDelayExecution_t* Date::NtDelayExecution = (NtDelayExecution_t*)GetProcAddress(ntdll, (char*)"NtDelayExecution");
 
-const string Date::getLocalDateTimeString() {
-	return getLocalDateTimeString(getCurrentTimeMillis());
+const string Date::toLocalDateTimeString() {
+	return toLocalDateTimeString(getCurrentTimeMillis());
 }
 
-const string Date::getLocalDateTimeString(const time_t timestamp) {
+const string Date::toLocalDateTimeString(const time_t timestamp) {
 	//strftime can only handle seconds.
 	time_t tSec = timestamp / 1000 - getTimezoneOffset();
 	char buf[BUFFER_SIZE];
@@ -25,11 +25,11 @@ const string Date::getLocalDateTimeString(const time_t timestamp) {
 	return string(buf);
 }
 
-const string Date::getIsoString() {
-	return getIsoString(getCurrentTimeMillis());
+const string Date::toIsoString() {
+	return toIsoString(getCurrentTimeMillis());
 }
 
-const string Date::getIsoString(const time_t timestamp) {
+const string Date::toIsoString(const time_t timestamp) {
 	//strftime can only handle seconds.
 	time_t tSec = timestamp / 1000;
 	char buf[BUFFER_SIZE];
@@ -79,6 +79,14 @@ const bool Date::fromIsoString(const char *isoString, time_t *timestampOut) {
 	}
 
 	_tzset();
+
+	long timezoneDiff;
+#ifdef _get_timezone
+	_get_timezone(&timezoneDiff);
+#else
+	timezoneDiff = _timezone;
+#endif
+
 	*timestampOut = 1000 * (timesec - _timezone) + f;
 	return true;
 }

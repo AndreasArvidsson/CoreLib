@@ -32,10 +32,10 @@ public:
 		std::this_thread::sleep_for(std::chrono::seconds(s));
 	}
 
-	static const string getLocalDateTimeString();
-	static const string getLocalDateTimeString(const time_t timestamp);
-	static const string getIsoString();
-	static const string getIsoString(const time_t timestamp);
+	static const string toLocalDateTimeString();
+	static const string toLocalDateTimeString(const time_t timestamp);
+	static const string toIsoString();
+	static const string toIsoString(const time_t timestamp);
 	static const bool fromIsoString(const char *isoString, time_t *timestampOut);
 
 private:

@@ -23,7 +23,7 @@ void Log::log(const char*const type, const char*const file, const unsigned int l
 
 	//Create final string with logger specific format.
 	char resultText[BUFFER_SIZE];
-	snprintf(resultText, BUFFER_SIZE, "%s | %s | %s(%d) | %s\n", Date::getLocalDateTimeString().c_str(), type, file, line, userText);
+	snprintf(resultText, BUFFER_SIZE, "%s | %s | %s(%d) | %s\n", Date::toLocalDateTimeString().c_str(), type, file, line, userText);
 
 	logText(resultText);
 }
